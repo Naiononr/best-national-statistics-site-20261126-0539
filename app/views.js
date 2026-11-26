@@ -3,7 +3,7 @@
 // after mount so canvases have layout size.
 import {
   AGE_GROUPS, COUNTRY, EXPORTS, GDP_GROWTH, GDP_NOMINAL, GDP_SECTORS,
-  HEADLINES, HEALTH_EDU, IMPORTS, INFLATION, JOBS_SECTORS, MACRO_TABLE,
+  HEADLINES, HEALTH_EDU, INFLATION, JOBS_SECTORS, MACRO_TABLE,
   POPULATION, POVERTY, PROVINCES, RELEASES, UNEMPLOYMENT, YEARS,
 } from './data.js';
 
@@ -94,6 +94,12 @@ export function viewEconomy() {
       <p class="card-sub">Share of nominal GDP by sector, 2024.</p>
       <div class="chart-wrap"><canvas id="chart-sectors" height="260"></canvas></div>
       ${sourceNote('BPS', '2024')}
+    </section>
+    <section class="card chart-card">
+      <h2>Nominal GDP</h2>
+      <p class="card-sub">Nominal GDP in trillion rupiah — the economy nearly doubled in ten years.</p>
+      <div class="chart-wrap"><canvas id="chart-nominal" height="260"></canvas></div>
+      ${sourceNote('BPS', '2015–2024')}
     </section>
   </div>
   <section class="card">
@@ -347,6 +353,8 @@ export function drawPageCharts(route, rangeYears = 10) {
       if (trade) drawBarChart(trade, labels, slice(EXPORTS), { format: (v) => `$${v.toFixed(0)}bn`, color: '#2563eb' });
       const sectors = byId('chart-sectors');
       if (sectors) drawDonut(sectors, GDP_SECTORS.slice(0, 8).map((s) => ({ label: s.sector, value: s.share })), { centre: '100%', centreSub: 'of GDP' });
+      const nominal = byId('chart-nominal');
+      if (nominal) drawLineChart(nominal, labels, slice(GDP_NOMINAL), { format: (v) => `Rp ${v.toLocaleString('en-US')}tn`, min: 10000, max: 24000, color: '#2563eb' });
     }
     if (route === '/population') {
       const age = byId('chart-age');
@@ -362,5 +370,3 @@ export function drawPageCharts(route, rangeYears = 10) {
     }
   });
 }
-
-export { EXPORTS, GDP_NOMINAL, IMPORTS, INFLATION };
